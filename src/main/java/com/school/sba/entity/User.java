@@ -9,11 +9,13 @@ import com.school.sba.enums.Userrole;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +35,7 @@ public class User
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int userId;
 	@Column(unique=true)
-	private String username;
+	private String userName;
 	private String password;
 	private String firstName;
 	private String lastName;
@@ -42,12 +44,18 @@ public class User
 	@Column(unique=true)
 	private String email;
 	private Userrole userrole;
-	private Boolean isDelete;
+	private boolean isDeleted;
 	
 	@ManyToOne
 	private School school;
 	
 	@ManyToMany
-	private List<AcademicProgram> academiclist = new ArrayList<AcademicProgram>();
+	private List<AcademicProgram> academiclist;
+
+	@ManyToOne
+	private Subject subject;
 	
+	
+	@OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+	private List<ClassHour> classHours;
 }

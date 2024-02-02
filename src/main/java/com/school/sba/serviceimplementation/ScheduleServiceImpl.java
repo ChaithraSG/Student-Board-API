@@ -38,11 +38,11 @@ public class ScheduleServiceImpl implements ScheduleService
 		return Schedule.builder()
 				.opensAt(request.getOpensAt())
 				.closesAt(request.getClosesAt())
-				.classHourLength(Duration.ofMinutes(request.getClassHourLengthInMins()))
+				.classHourLengthinMinutes(Duration.ofMinutes(request.getClassHourLengthInMins()))
 				.lunchTime(request.getLunchTime())
-				.lunchLength(Duration.ofMinutes(request.getLunchLengthInMins()))
+				.lunchLengthinMinutes(Duration.ofMinutes(request.getLunchLengthInMins()))
 				.breakTime(request.getBreakTime())
-				.breakLength(Duration.ofMinutes(request.getBreakLengthInMins()))
+				.breakLengthinMinutes(Duration.ofMinutes(request.getBreakLengthInMins()))
 				.classHoursPerDay(request.getClassHoursPerDay())
 				.build();
 	}
@@ -52,11 +52,11 @@ public class ScheduleServiceImpl implements ScheduleService
                 .opensAt(schedule.getOpensAt())
                 .closesAt(schedule.getClosesAt())
                 .classHoursPerDay(schedule.getClassHoursPerDay())
-                .classHourLengthInMins((int) schedule.getClassHourLength().toMinutes())
+                .classHourLengthInMins((int) schedule.getClassHourLengthinMinutes().toMinutes())
                 .breakTime(schedule.getBreakTime())
-                .breakLengthInMins((int) schedule.getBreakLength().toMinutes())
+                .breakLengthInMins((int) schedule.getBreakLengthinMinutes().toMinutes())
                 .lunchTime(schedule.getLunchTime())
-                .lunchLengthInMins((int) schedule.getLunchLength().toMinutes())
+                .lunchLengthInMins((int) schedule.getLunchLengthinMinutes().toMinutes())
                 .build();
     }
 	@Override
@@ -90,7 +90,8 @@ public class ScheduleServiceImpl implements ScheduleService
 	@Override
 	public ResponseEntity<ResponseStructure<ScheduleResponse>> updateSchedule(int scheduleId, ScheduleRequest scheduleRequest)
 	{
-		Schedule updateschedule = scheduleRepository.findById(scheduleId).map(u->{return scheduleRepository.save(mapToScheduleRequest(scheduleRequest));
+		Schedule updateschedule = scheduleRepository.findById(scheduleId)
+				.map(u->{return scheduleRepository.save(mapToScheduleRequest(scheduleRequest));
 		}).orElseThrow(()-> new UserNotFoundByIdException("Invalid UserId"));
 		responseStructure.setStatus(HttpStatus.OK.value());
 		responseStructure.setMessage("user data updates successfully");
@@ -99,6 +100,18 @@ public class ScheduleServiceImpl implements ScheduleService
 		return new ResponseEntity<ResponseStructure<ScheduleResponse>>(responseStructure, HttpStatus.OK);
 	}
 	
+	@Override
+	public ResponseEntity<ResponseStructure<ScheduleResponse>> deleteSchedule(int scheduleId, Schedule schedule)
+	{
+		Schedule deleteschedule = scheduleRepository.findById(scheduleId)
+				.orElseThrow(()-> new UserNotFoundByIdException("failed to delete user"));
+		scheduleRepository.delete(deleteschedule);
+		responseStructure.setStatus(HttpStatus.FOUND.value());
+		responseStructure.setMessage("schedule deleted successfully");
+		responseStructure.setData(mapToScheduleResponse(deleteschedule));
+		return new ResponseEntity<ResponseStructure<ScheduleResponse>>(responseStructure , HttpStatus.FOUND);
+		
+	}
 	
 	
 	

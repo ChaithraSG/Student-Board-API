@@ -16,6 +16,7 @@ public class ResponseStructure<T>
 	private T data;
 	private AcademicProgram Data;
 	
+	
 	public void setData(AcademicProgram data) {
 		Data = data;
 	}

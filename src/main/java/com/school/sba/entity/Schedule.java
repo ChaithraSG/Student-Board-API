@@ -28,10 +28,10 @@ public class Schedule
 	private LocalTime opensAt;
 	private LocalTime closesAt;
 	private int classHoursPerDay;
-	private Duration classHourLength;
+	private Duration classHourLengthinMinutes;
 	private LocalTime breakTime;
-	private Duration breakLength;
+	private Duration breakLengthinMinutes;
 	private LocalTime lunchTime;
-	private Duration lunchLength;
+	private Duration lunchLengthinMinutes;
 
 }
